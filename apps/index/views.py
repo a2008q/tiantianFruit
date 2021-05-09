@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .models import *
+from .forms import *
 
 
 # Create your views here.
@@ -9,36 +10,30 @@ from .models import *
 
 def login_views(request):
     if request.method == 'GET':
-        return render(request, 'login.html')
+        form = LoginForm()
+        return render(request, 'login.html', locals())
+        # return render(request, 'login.html')
     else:
         uname, upwd = None, None
-        if 'username' in request.POST:
-            uname = request.POST['username']
-        if 'pwd' in request.POST:
-            upwd = request.POST['pwd']
-        """
-        if uname and upwd:
-            # select * from index_users where uname=uname,upass=upwd
-            users = Users.objects.filter(uname=uname, upass=upwd)
-            if users:
-                return redirect(index_views)
-            else:
-                return render(request, 'login.html', {'errmsg': '用户名或密码不正确'})
-        else:
-            return render(request, 'login.html', {'errmsg': '请输入手机号和密码'})
-        """
-        if uname and upwd:
-            users = Users.objects.filter(uname=uname)
-            if users:
-                user = users[0]
-                if user.upass == upwd:
-                    return redirect(index_views)
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            uname = form.cleaned_data['username']
+            upwd = form.cleaned_data['password']
+            if uname and upwd:
+                users = Users.objects.filter(uname=uname)
+                if users:
+                    user = users[0]
+                    if user.upass == upwd:
+                        return redirect(index_views)
+                    else:
+                        errmsg = "密码不正确"
+                        return render(request, 'login.html', locals())
                 else:
-                    return render(request, 'login.html', {'errmsg': '密码不正确'})
+                    errmsg = "用户名不正确"
+                    return render(request, 'login.html', locals())
             else:
-                return render(request, 'login.html', {'errmsg': '用户名不正确'})
-        else:
-            return render(request, 'login.html', {'errmsg': '请输入用户名和密码'})
+                errmsg = '请输入用户名和密码'
+                return render(request, 'login.html', locals())
 
 
 def register_views(request):

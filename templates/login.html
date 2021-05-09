@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 {% endblock topfiles %}
 {% block body %}
+
     <div class="login_top clearfix">
         <a href="index.html" class="login_logo"><img src="{% static 'images/logo02.png' %}"></a>
     </div>
@@ -26,10 +27,7 @@
                     {# 不设置表单action 默认提交地址为当前url #}
                     <form method="post">
                         {% csrf_token %}
-                        <input type="text" name="username" id="username" class="name_input" value="{{ username }}" placeholder="请输入用户名">
-                        <div class="user_error">输入错误</div>
-                        <input type="password" name="pwd" id="pwd" class="pass_input" placeholder="请输入密码">
-                        <div class="pwd_error">输入错误</div>
+                        {{ form }}
                         <div class="more_input clearfix">
                             <input type="checkbox" name="remember" {{ checked }}>
                             <label>记住用户名</label>
