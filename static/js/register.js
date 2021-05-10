@@ -8,7 +8,7 @@ $(function () {
     var error_phone = false;
 
 
-    $('#username').blur(function () {
+    $('#id_uname').blur(function () {
         check_user_name();
     });
 
@@ -67,22 +67,23 @@ $(function () {
 
 
     function check_user_name() {
-        var len = $('#username').val().length;
+        var len = $('#id_uname').val().length;
         if (len < 5 || len > 20) {
-            $('#username').next().html('请输入5-20个字符的用户名')
-            $('#username').next().show();
+            $('#id_uname').next().html('请输入5-20个字符的用户名')
+            $('#id_uname').next().show();
             error_name = true;
         } else {
             $('#username').next().hide();
             error_name = false;
             csrf = $('input[name="csrfmiddlewaretoken"]').val()
-            name = $("#username").val()
+            name = $("#id_uname").val()
             $.ajax({
                 type: "POST",
                 url: '/index/checkName/',
                 data: {'csrfmiddlewaretoken': csrf, 'name': name},
                 success: function (msg) {
                     if (msg != 'ok') {
+                        alert("您输入的用户名已被注册");
                         $('#username').next().html('您输入的用户名已经被注册')
                         $('#username').next().show();
                         error_check_password = true;

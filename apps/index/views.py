@@ -38,20 +38,27 @@ def login_views(request):
 
 def register_views(request):
     if request.method == "GET":
-        return render(request, 'register.html')
+        form = RegForm()
+        form = form.as_ul()
+        return render(request, 'register.html', locals())
+        # return render(request, 'register.html')
     else:
-        uname, upwd, uemail = None, None, None
-        if 'username' in request.POST:
-            uname = request.POST['username']
-        if 'pwd' in request.POST:
-            upwd = request.POST['pwd']
-        if 'email' in request.POST:
-            uemail = request.POST['email']
-        if 'phone' in request.POST:
-            phone = request.POST['phone']
-        if uname and upwd and uemail and phone:
-            Users.objects.create(uname=uname, upass=upwd, uemail=uemail, uphone=phone)
+        form = RegForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect(login_views)
+        # uname, upwd, uemail = None, None, None
+        # if 'username' in request.POST:
+        #     uname = request.POST['username']
+        # if 'pwd' in request.POST:
+        #     upwd = request.POST['pwd']
+        # if 'email' in request.POST:
+        #     uemail = request.POST['email']
+        # if 'phone' in request.POST:
+        #     phone = request.POST['phone']
+        # if uname and upwd and uemail and phone:
+        #     Users.objects.create(uname=uname, upass=upwd, uemail=uemail, uphone=phone)
+        #     return redirect(login_views)
         else:
             render(request, 'register.html', {'errmsg': '信息不完整'})
 
